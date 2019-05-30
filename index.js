@@ -22,13 +22,36 @@ client.on('message', msg => {
         // Return if not Mico or Kaiku user ID
         console.log(msg.author.id);
         if (msg.author.id != "136856906139566081" && msg.author.id != "133701588651999232") return;
-        msg.channel.send("Input: " + msg.content + " |  Validated: " + input);
+        msg.channel.send({
+            embed: {
+                color: 3447003,
+                author: {
+                    name: client.user.username,
+                    icon_url: client.user.avatarURL
+                },
+                title: "https://github.com/Microoo/fewbewki",
+                url: "https://github.com/Microoo/fewbewki",
+                description: "Debug",
+                fields: [{
+                        // Input & validated input
+                        name: "Input",
+                        value: "Raw: " + msg.content + " |  Validated: " + input,
+                    },
+                    {
+                        // Uptime
+                        name: "Uptime",
+                        value: msg.reply(Math.round(process.uptime()) + " seconds"),
+                    },
+                ],
+                timestamp: new Date(),
+                footer: {
+                    icon_url: client.user.avatarURL,
+                    text: "Fewbewki"
+                }
+            }
+        });
     }
 
-    // Uptime and other possible info in the future
-    if (input === 'uptime') {
-        msg.reply(Math.round(process.uptime()) + " seconds");
-    }
 
     // Github info
     if (input === 'github') {
