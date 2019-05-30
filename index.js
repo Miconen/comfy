@@ -40,7 +40,7 @@ client.on('message', msg => {
                     {
                         // Uptime
                         name: "Uptime",
-                        value: msg.reply(Math.round(process.uptime()) + " seconds"),
+                        value: Math.round(process.uptime()) + " seconds",
                     },
                 ],
                 timestamp: new Date(),
