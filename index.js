@@ -20,7 +20,6 @@ client.on('message', msg => {
     // Dump variables etc
     if (input === 'debug') {
         // Return if not Mico or Kaiku user ID
-        console.log(msg.author.id);
         if (msg.author.id != "136856906139566081" && msg.author.id != "133701588651999232") return;
         msg.channel.send({
             embed: {
@@ -35,12 +34,12 @@ client.on('message', msg => {
                 fields: [{
                         // Input & validated input
                         name: "Input",
-                        value: "Raw: " + msg.content + " |  Validated: " + input,
+                        value: "Raw: " + msg.content + " |  Validated: " + input
                     },
                     {
                         // Uptime
                         name: "Uptime",
-                        value: Math.round(process.uptime()) + " seconds",
+                        value: Math.round(process.uptime()) + " seconds"
                     },
                 ],
                 timestamp: new Date(),
@@ -50,7 +49,7 @@ client.on('message', msg => {
                 }
             }
         });
-    }
+    };
 
 
     // Github info
