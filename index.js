@@ -1,140 +1,63 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-const config = require("./config.json");
-const credentials = require("./credentials.json");
-
+const fs = require('fs');
 const getRepoInfo = require('git-repo-info');
-const gitInfo = getRepoInfo();
 
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-});
-
-const fewbewki = {
+Client = {
     // TRUE for dev (Fewbewki Dev#0066)
     // FALSE for production (Fewbewki#7145)
     dev: true,
-    command: {
-        debug: {
-            // Command specific input handling
-            handler: function(msg, inputArr) {
-                fewbewki.command.debug.default(msg, inputArr);
-            },
-            default: function(msg, inputArr) {
-                // Return if not Mico or Kaiku user ID
-                if (msg.author.id != "136856906139566081" && msg.author.id != "133701588651999232") return;
-                msg.channel.send({
-                    embed: {
-                        color: 3447003,
-                        author: {
-                            name: client.user.username,
-                            icon_url: client.user.avatarURL
-                        },
-                        title: "https://github.com/Microoo/fewbewki",
-                        url: "https://github.com/Microoo/fewbewki",
-                        description: "Debug",
-                        fields: [{
-                                // Input & validated input
-                                name: "Input",
-                                value: "Input: " + msg.content + " |  Args: " + inputArr.length
-                            },
-                            {
-                                // Uptime
-                                name: "Uptime",
-                                value: Math.round(process.uptime()) + " seconds"
-                            },
-                        ],
-                        timestamp: new Date(),
-                        footer: {
-                            icon_url: client.user.avatarURL,
-                            text: "Fewbewki"
-                        }
-                    }
-                });
-            },
-        },
-        github: {
-            // Command specific input handling
-            handler: function(msg, inputArr) {
-                fewbewki.command.github.default(msg, inputArr);
-            },
-            default: function(msg, inputArr) {
-            msg.channel.send({
-                embed: {
-                    color: 3447003,
-                    author: {
-                        name: client.user.username,
-                        icon_url: client.user.avatarURL
-                    },
-                    title: "https://github.com/Microoo/fewbewki",
-                    url: "https://github.com/Microoo/fewbewki",
-                    // IDEA: Add random flavor text from array
-                    description: "Cool description here :)",
-                    fields: [{
-                            name: "General",
-                            value: "Branch: " + gitInfo.branch,
-                        },
-                        {
-                            name: "Last Commit",
-                            value: gitInfo.committer + " at " + gitInfo.committerDate + " _'" + gitInfo.commitMessage + "'_"
-                        },
-                    ],
-                    timestamp: new Date(),
-                    footer: {
-                        icon_url: client.user.avatarURL,
-                        text: "Fewbewki"
-                    }
-                }
-            });
-        },
-        },
-        compatibility: {
-            handler: function(msg, inputArr) {
-                function denyInput(msg, inputArr) {
-                    fewbewki.command.compatibility.error(msg, inputArr);
-                }
-                if (inputArr <= 1 || inputArr[1][0] != '<') {
-                    denyInput(msg, inputArr);
-                } else {
-                    fewbewki.command.compatibility.default(msg, inputArr);
-                }
-            },
+    config: require('./config.json'),
+    credentials: require("./credentials.json"),
+    prefix: undefined,
+    gitformation: getRepoInfo(),
+    bot: new Discord.Client(),
+    load: (command) => {
+        let commandsList = fs.readdirSync('./commands/');
+        if (command) {
+            if (commandsList.indexOf(`${command}`) >= 0) {
+                delete require.cache[require.resolve(`./commands/${command}`)];
+                Client.commands[command] = require(`./commands/${command}`);
+            }
+        } else {
 
-            default: function(msg, inputArr) {
-                var randomNumber = Math.floor(Math.random() * 100) + 1;
-                msg.channel.send(msg.author + ' & ' + inputArr[1] + ' ' + randomNumber + '%');
-            },
+            if (Client.prefix == undefined) {
+                if (Client.dev === true) Client.prefix = Client.config.prefix_dev;
+                else Client.prefix = Client.config.prefix;
+            }
 
-            error: function(msg, inputArr) {
-                return msg.reply('Invalid input');
+            Client.commands = {};
+            for (i = 0; i < commandsList.length; i++) {
+                let item = commandsList[i];
+                if (item.match(/\.js$/)) {
+                    delete require.cache[require.resolve(`./commands/${item}`)];
+                    Client.commands[item.slice(0, -3)] = require(`./commands/${item}`);
+                }
             }
         }
-    },
-};
-
-var prefix;
-
-if (fewbewki.dev === true) {
-    prefix = config.prefix_dev;
-} else {
-    prefix = config.prefix;
+    }
 }
 
-client.on('message', msg => {
+// Initiate commands for the first time
+Client.load();
 
-    // Validate user input for easier handling
-    if (msg.author.bot) return;
-    if (msg.content[0] !== prefix) return;
-    var input = msg.content.toLowerCase().slice(1);
-    var inputArr = input.split(' ');
-
-    // Catch user input here and use to call from fewbewki object
-    if (typeof fewbewki['command'][inputArr[0]]['handler'] === 'function') fewbewki['command'][inputArr[0]]['handler'].apply(null, [msg, inputArr]);
-
+Client.bot.on('ready', () => {
+    console.log(`Logged in as ${Client.bot.user.tag}!`);
 });
 
-if (fewbewki.dev === true) {
-    client.login(credentials.token_dev);
+Client.bot.on('message', msg => {
+
+    // Validate user input for easier handling
+    if (msg.content[0] !== Client.prefix || msg.content == Client.prefix || msg.author.bot) return;
+    // Input in sanitized in lowercase and with no prefix
+    var input = msg.content.toLowerCase().slice(Client.prefix.length);
+    var args = input.split(' ');
+    if (args[0] in Client.commands) {
+        Client.commands[args[0]].func(Client, msg, args);
+    }
+});
+
+if (Client.dev === true) {
+    Client.bot.login(Client.credentials.token_dev);
 } else {
-    client.login(credentials.token);
+    Client.bot.login(Client.credentials.token);
 }
