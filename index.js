@@ -25,7 +25,6 @@ Client = {
                 Client.commands[command] = require(`./commands/${command}`);
             }
         } else {
-
             // This runs on initial load and sets Client.prefix to be the proper one based on Client.dev boolean
             if (!Client.prefix) Client.dev ? Client.prefix = Client.config.prefix_dev : Client.prefix = Client.config.prefix;
             Client.commands = {};
@@ -44,15 +43,12 @@ Client = {
 Client.load();
 
 Client.bot.on('message', msg => {
-
     // Validate user input for easier handling
     if (msg.content[0] !== Client.prefix || msg.content == Client.prefix || msg.author.bot) return;
     // Input in sanitized in lowercase and with no prefix
     var input = msg.content.toLowerCase().slice(Client.prefix.length);
     var args = input.split(' ');
-    if (args[0] in Client.commands) {
-        Client.commands[args[0]].func(Client, msg, args);
-    }
+    if (args[0] in Client.commands) Client.commands[args[0]].func(Client, msg, args);
 });
 
 // When ready console log

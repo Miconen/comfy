@@ -7,22 +7,10 @@ module.exports = {
             if (args[1] in Client.commands && Client.commands[args[1]].help) {
                 let help = `${Client.prefix + [args[1]]} :: ${Client.commands[args[1]].help}\n`;
                 if (Client.commands[args[1]].help_detailed !== undefined) {
-
-                    // TODO: Make this way of getting object lenght easier
-                    Object.size = function(obj) {
-                    let size = 0, key;
-                    for (key in obj) {
-                        if (obj.hasOwnProperty(key)) size++;
-                    }
-                        return size;
-                    };
-
-                    let size = Object.size(Client.commands[args[1]].help_detailed);
-
-                    for (var i = 0; i < size; i++) {
-
-                        if (Client.commands[args[1]].help_detailed[i] !== undefined) {
-                            help += `${Client.commands[args[1]].help_detailed[i]}\n`
+                    let size = Client.commands[args[1]].help_detailed;
+                    for (var i = 0; i < size.length; i++) {
+                        if (Client.commands[args[1]].help_detailed[i]) {
+                            help += `${Client.commands[args[1]].help_detailed[i]}\n`;
                         } else {
                             break;
                         }

@@ -20,14 +20,9 @@ module.exports = {
         var compatibility = parseInt(compatibility_user1) + parseInt(compatibility_user2);
 
         // If compatibility is higher than 100 cut the first number off
+        if (compatibility > 100) compatibility = compatibility.toString().substring(1,3);
         // Send result to sendReply()
-        if (compatibility == 100) sendReply(compatibility);
-        if (compatibility < 100) sendReply(compatibility);
-        if (compatibility > 100) {
-            var compatibilityString = compatibility.toString();
-            compatibility = compatibilityString.substring(1,3);
-            sendReply(compatibility);
-        }
+        sendReply(compatibility);
 
         // Reply embed stuff
         function sendReply(compatibility) {
