@@ -5,7 +5,7 @@ const getRepoInfo = require('git-repo-info');
 Client = {
     // TRUE for dev (Fewbewki Dev#0066)
     // FALSE for production (Fewbewki#7145)
-    dev: true,
+    dev: false,
     config: require('./config.json'),
     credentials: require("./credentials.json"),
     prefix: undefined,
