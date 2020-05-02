@@ -1,5 +1,10 @@
 module.exports = {
     help: 'Check compatibility between two users',
+    help_detailed: [
+        "Takes two inputs after command",
+        "!compatibility <user1> <user2>",
+        "Percentage is based on user id"
+    ],
     func: (Client, msg, args) => {
         // Check for errors
         if (args[1] == undefined || args[2] == undefined) return sendError('Give two tags after the command \n !compatibility <user1> <user2>');
