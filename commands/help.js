@@ -28,14 +28,14 @@ module.exports = {
                         }
                     }
                 }
-                msg.channel.sendCode('asciidoc', help);
+                msg.channel.send(help);
             }
         } else {
             let help = `Type ${Client.prefix}help <command> for details\n`;
             for (var command in Client.commands) {
                 help += `${Client.prefix + command} :: ${Client.commands[command].help}\n`;
             }
-            msg.channel.sendCode('asciidoc', help);
+            msg.channel.send(help);
         }
     }
 }

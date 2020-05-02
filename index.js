@@ -6,11 +6,17 @@ Client = {
     // TRUE for dev (Fewbewki Dev#0066)
     // FALSE for production (Fewbewki#7145)
     dev: false,
+    // Includes prefixes for dev and production version of the bots and allows for easy changes through the file
     config: require('./config.json'),
+    // Bot tokens
     credentials: require("./credentials.json"),
+    // Leaving as undefined cause it gets defined anyways on startup based on Client.dev boolean
     prefix: undefined,
+    // Github repo information module
     gitformation: getRepoInfo(),
+    // Discord.js stuff
     bot: new Discord.Client(),
+    // Load commands from commands folder
     load: (command) => {
         let commandsList = fs.readdirSync('./commands/');
         if (command) {
@@ -20,11 +26,8 @@ Client = {
             }
         } else {
 
-            if (Client.prefix == undefined) {
-                if (Client.dev === true) Client.prefix = Client.config.prefix_dev;
-                else Client.prefix = Client.config.prefix;
-            }
-
+            // This runs on initial load and sets Client.prefix to be the proper one based on Client.dev boolean
+            if (!Client.prefix) Client.dev ? Client.prefix = Client.config.prefix_dev : Client.prefix = Client.config.prefix;
             Client.commands = {};
             for (i = 0; i < commandsList.length; i++) {
                 let item = commandsList[i];
@@ -40,10 +43,6 @@ Client = {
 // Initiate commands for the first time
 Client.load();
 
-Client.bot.on('ready', () => {
-    console.log(`Logged in as ${Client.bot.user.tag}!`);
-});
-
 Client.bot.on('message', msg => {
 
     // Validate user input for easier handling
@@ -56,8 +55,10 @@ Client.bot.on('message', msg => {
     }
 });
 
-if (Client.dev === true) {
-    Client.bot.login(Client.credentials.token_dev);
-} else {
-    Client.bot.login(Client.credentials.token);
-}
+// When ready console log
+Client.bot.on('ready', () => {
+    console.log(`Logged: ${Client.bot.user.tag}\nPrefix: ${Client.prefix}\nDev: ${Client.dev}`);
+});
+
+// Ternary operator to login based on Client.dev boolean
+Client.dev ? Client.bot.login(Client.credentials.token_dev) : Client.bot.login(Client.credentials.token);
