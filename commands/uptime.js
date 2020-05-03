@@ -8,30 +8,35 @@ module.exports = {
         "!uptime weeks",
         "!uptime months"
     ],
+    alias: [
+        "runtime"
+    ],
     func: (Client, msg, args) => {
-        if (args.length > 2) return;
+        if (args.length > 2) return Client.error(msg, 'Too many arguments, try !help uptime');
+        var uptime = Math.round(process.uptime());
         switch (args[1]) {
             case 'seconds':
-                var uptime = Math.round(process.uptime()) + " seconds"
+                uptime = uptime + " seconds";
                 break;
             case 'minutes':
-                var uptime = Math.round(process.uptime()) / 60 + " minutes"
+                uptime = uptime / 60 + " minutes";
                 break;
             case 'hours':
-                var uptime = Math.round(process.uptime()) / 3600 + " hours"
+                uptime = uptime / 3600 + " hours";
                 break;
             case 'days':
-                var uptime = Math.round(process.uptime()) / 86400 + " days"
+                uptime = uptime / 86400 + " days";
                 break;
             case 'weeks':
-                var uptime = Math.round(process.uptime()) / 604800 + " weeks"
+                uptime = uptime / 604800 + " weeks";
                 break;
             case 'months':
-                var uptime = Math.round(process.uptime()) / 2592000 + " months"
+                uptime = uptime / 2592000 + " months";
                 break;
             default:
-                var uptime = Math.round(process.uptime()) + " seconds"
+                uptime = uptime + " seconds";
         }
+
 
         msg.channel.send({
             embed: {
@@ -56,4 +61,4 @@ module.exports = {
             }
         });
     }
-}
+};

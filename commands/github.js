@@ -1,6 +1,12 @@
 module.exports = {
     help: 'Info about github',
+    alias: [
+        'git',
+        'code'
+    ],
     func: (Client, msg, args) => {
+        if (args.length > 1) return Client.error(msg, 'Too many arguments');
+
         msg.channel.send({
             embed: {
                 color: 3447003,

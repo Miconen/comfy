@@ -5,16 +5,17 @@ module.exports = {
         "!compatibility <user1> <user2>",
         "Percentage is based on user id"
     ],
+    alias: [
+        "uwu",
+        "hate",
+        "love"
+    ],
     func: (Client, msg, args) => {
         // Check for errors
-        if (args[1] == undefined || args[2] == undefined) return sendError('Give two tags after the command \n !compatibility <user1> <user2>');
-        if (args[1] == args[2]) return sendError("Users can't be the same person");
-        if (args[1].substring(0,3) !== "<@!" && args[2].substring(0,3) !== "<@!") return sendError('Given users need to be tagged (for now)');
-
-        // Throw error
-        function sendError(error) {
-            msg.reply(error);
-        }
+        if (args[1] == undefined || args[2] == undefined) return Client.error(msg, 'Give two tags after the command \n !compatibility <user1> <user2>');
+        if (args.length > 3) return Client.error(msg, 'Too many arguments');
+        if (args[1] == args[2]) return Client.error(msg, "Users can't be the same person");
+        if (args[1].substring(0,3) !== "<@!" && args[2].substring(0,3) !== "<@!") return Client.error(msg, 'Given users need to be tagged (for now)');
 
         // Cut <@! from beginning and > from end of tag. Example tag: <@!136856906139566081>
         var compatibility_user1 = args[1].substring(19, args[1].length - 1);
@@ -43,7 +44,7 @@ module.exports = {
                     // IDEA: Add random flavor text from array
                     description: "Cool description here :)",
                     fields: [{
-                            name: "Compatibility",
+                            name: args[0].charAt(0).toUpperCase() + args[0].slice(1),
                             value: args[1] + " " + compatibility + "% " + args[2],
                         },
                     ],
