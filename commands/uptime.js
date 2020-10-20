@@ -37,7 +37,6 @@ module.exports = {
                 uptime = uptime + " seconds";
         }
 
-
         msg.channel.send({
             embed: {
                 color: 3447003,
@@ -51,7 +50,7 @@ module.exports = {
                 fields: [{
                     // Uptime
                     name: "Uptime",
-                    value: uptime
+                    value: parseInt(uptime).toFixed(2)
                 }, ],
                 timestamp: new Date(),
                 footer: {

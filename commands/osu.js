@@ -1,3 +1,4 @@
+// TODO: Whole command lol
 module.exports = {
     help: 'Commands related to the circle clicking game known as osu!',
     help_detailed: [

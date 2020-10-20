@@ -71,9 +71,10 @@ Client = {
     }
 }
 
-// Initiate commands for the first time
+// Initiate commands for the first time on startup
 Client.load();
 
+// Catches messages
 Client.bot.on('message', msg => {
     // Validate user input for easier handling
     if (msg.content[0] !== Client.prefix || msg.content == Client.prefix || msg.author.bot) return;

@@ -1,5 +1,4 @@
-// TODO: Remove sendCode and replace everything with fancy embeds
-// TODO: Don't output command aliasesby recognizing aliases with .isAlias
+// TODO: Replace everything with fancy embeds
 module.exports = {
     help: 'Help with commands',
     func: (Client, msg, args) => {
