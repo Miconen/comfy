@@ -1,51 +1,41 @@
 # fewbewki
 Easy to develop for discord bot using discord.js
 
-<h1>NPM Packages</h1>
-<ul>
-  <li>discord.js</li>
-  <li>forever</li>
-  <li>git-repo-info</li>
-  <li>colors</li>
-</ul>
+### NPM Packages
+- discord.js
+- git-repo-info
+- colors
 
-<h1>Command template</h1>
-
+### Command template
+```javascript
+// ./commands/example.js
 module.exports = {
-    help: 'Commands related to the circle clicking game known as osu!',
+    help: 'I will be shown when called with !help example',
     help_detailed: [
-        'vitun meme'
+        'I am optional',
+        'supports and will output more lines'
     ],
-    func: (Client, msg, args) => {
-        function osuRequest(type, user, callback) {
-            if (type == 'profile') var settings = 'get_user?u=' + user;
-            if (type == 'recent') var settings = 'get_user_recent?u=' + user;
-            var osuUrl = 'https://osu.ppy.sh/api/' + settings + '&k=' + Client.credentials.osuapi;
+    alias: [
+        'you can also call this whole command by this string',
+        'supports multiple aliases',
+        'testexample'
+        // !testexample
+        // ^ will return same results as !example
+    ],
+    func: (Client, msg, args) => { // Parameters passed in index.js at Comfy.startListen()
+        // This will execute when you call the function directly
+        // Examples of parameter handling...
 
-            (async () => {
-                try {
-                    const response = await got(osuUrl);
-                    console.log(response);
-                } catch (error) {
-                    console.log(error.response);
-                }
-            })();
-        }
-
-        function osuRecentplay(xhttp) {
-
-        }
-
-        function osuProfile(xhttp) {
-
-        }
-        if (args.length == 1) {
+        // Show help command result for command if not enough parameters
+        if (args.length <= 1) {
             args[1] = args[0];
             return Client.commands.help.func(Client, msg, args);
         }
 
-        if (args[1] == 'profile') {
-            osuRequest('profile', args[2], osuProfile)
+        // Easy checking of arguments
+        if (args[2] == 'profile') {
+            Client.errorReply(msg, 'Hello world');
         }
     }
 }
+```
