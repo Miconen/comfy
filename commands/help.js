@@ -1,9 +1,12 @@
 // TODO: Replace everything with fancy embeds
 module.exports = {
     help: 'Help with commands',
+    alias: [
+        'commands'
+    ],
     func: (Client, msg, args) => {
-        if (args.length > 2) Client.error(msg, 'Too many arguments (for now)');
-        if (args.length = 2) {
+        if (args.length > 2) Client.errorReply(msg, 'Too many arguments (for now)');
+        if (args.length == 2) {
             if (args[1] in Client.commands && Client.commands[args[1]].help) {
                 let help = `${Client.prefix + [args[1]]} :: ${Client.commands[args[1]].help}\n`;
 
@@ -20,7 +23,7 @@ module.exports = {
                 msg.channel.send(help);
             }
         }
-        if (args.length = 1) {
+        if (args.length == 1) {
             let help = `Type ${Client.prefix}help <command> for details\n`;
             for (var command in Client.commands) {
                 if (!Client.commands[command].isAlias) help += `${Client.prefix + command} :: ${Client.commands[command].help}\n`;

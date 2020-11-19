@@ -12,7 +12,7 @@ module.exports = {
         "runtime"
     ],
     func: (Client, msg, args) => {
-        if (args.length > 2) return Client.error(msg, 'Too many arguments, try !help uptime');
+        if (args.length > 2) return Client.errorReply(msg, 'Too many arguments, try !help uptime');
         var uptime = Math.round(process.uptime());
         switch (args[1]) {
             case 'seconds':

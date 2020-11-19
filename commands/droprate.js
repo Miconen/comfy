@@ -9,8 +9,8 @@ module.exports = {
     func: (Client, msg, args) => {
         var maxRolls = 10000;
         function rollRng(rolls, chance) {
-            if (!rolls || !chance) return Client.error(msg, 'Invalid arguments');
-            if (rolls > maxRolls) return Client.error(msg, 'Max amount of rolls is ' + maxRolls);
+            if (!rolls || !chance) return Client.errorReply(msg, 'Invalid arguments');
+            if (rolls > maxRolls) return Client.errorReply(msg, 'Max amount of rolls is ' + maxRolls);
             for (i = 0; i < rolls; i++) {
                 var rngDrop = Math.floor(Math.random() * chance) + 1;
                 if (rngDrop == 1) {

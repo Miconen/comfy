@@ -12,10 +12,10 @@ module.exports = {
     ],
     func: (Client, msg, args) => {
         // Check for errors
-        if (args[1] == undefined || args[2] == undefined) return Client.error(msg, 'Give two tags after the command \n !compatibility <user1> <user2>');
-        if (args.length > 3) return Client.error(msg, 'Too many arguments');
-        if (args[1] == args[2]) return Client.error(msg, "Users can't be the same person");
-        if (args[1].substring(0,3) !== "<@!" && args[2].substring(0,3) !== "<@!") return Client.error(msg, 'Given users need to be tagged (for now)');
+        if (args[1] == undefined || args[2] == undefined) return Client.errorReply(msg, 'Give two tags after the command \n !compatibility <user1> <user2>');
+        if (args.length > 3) return Client.errorReply(msg, 'Too many arguments');
+        if (args[1] == args[2]) return Client.errorReply(msg, "Users can't be the same person");
+        if (args[1].substring(0,3) !== "<@!" && args[2].substring(0,3) !== "<@!") return Client.errorReply(msg, 'Given users need to be tagged (for now)');
 
         // Cut <@! from beginning and > from end of tag. Example tag: <@!136856906139566081>
         var compatibility_user1 = args[1].substring(19, args[1].length - 1);

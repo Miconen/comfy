@@ -5,7 +5,7 @@ module.exports = {
         'code'
     ],
     func: (Client, msg, args) => {
-        if (args.length > 1) return Client.error(msg, 'Too many arguments');
+        if (args.length > 1) return Client.errorReply(msg, 'Too many arguments');
 
         msg.channel.send({
             embed: {
