@@ -6,7 +6,8 @@ Comfy to develop for discord bot using discord.js
 - git-repo-info
 - colors
 
-### Command template
+### Command template/example
+Dropping this .js file in ./commands will fully work
 ```javascript
 // ./commands/example.js
 module.exports = {
@@ -27,14 +28,18 @@ module.exports = {
         // Examples of parameter handling...
 
         // Show help command result for command if not enough parameters
-        if (args.length <= 1) {
+        if (args.length == 1) {
             args[1] = args[0];
             return Client.commands.help.func(Client, msg, args);
         }
 
         // Easy checking of arguments
         if (args[2] == 'profile') {
-            Client.errorReply(msg, 'Hello world');
+            Client.errorReply(msg, 'You did bad stuff');
+        }
+
+        if (args.length >= 2) {
+            return msg.channel.send('Hello world');
         }
     }
 }
