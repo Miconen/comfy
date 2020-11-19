@@ -1,5 +1,5 @@
-# fewbewki
-Easy to develop for discord bot using discord.js
+# Comfy
+Comfy to develop for discord bot using discord.js
 
 ### NPM Packages
 - discord.js
