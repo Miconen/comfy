@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const getRepoInfo = require('git-repo-info');
+var colors = require('colors');
 
 // TRUE for dev (Fewbewki Dev#0066)
 // FALSE for production (Fewbewki#7145)
@@ -12,6 +13,12 @@ class Comfy {
         this.credentials = require("./credentials.json");
         this.commandsList = fs.readdirSync('./commands/');
         this.commands = {};
+        colors.setTheme({
+            help: 'bgBlue',
+            warn: 'bgYellow',
+            success: 'bgGreen',
+            error: 'bgRed'
+        });
 
         this.dev = dev;
         this.prefix = dev ? this.prefix = this.config.prefix_dev : this.prefix = this.config.prefix;
@@ -20,7 +27,7 @@ class Comfy {
         this.bot = new Discord.Client();
         
         this.loadAll();
-        this.loadAliases();
+        // this.loadAliases();
         this.startListen();
         // Ternary operator to login based on this.dev boolean
         this.dev ? this.bot.login(this.credentials.token_dev) : this.bot.login(this.credentials.token);
@@ -28,17 +35,21 @@ class Comfy {
     }
     errorReply(msg, error) {
         msg.reply(`ERROR: ${error}`);
+        console.log(`ERROR: ${error}`.error);
     }
     error(error) {
-        return console.log(error);
+        return console.log(error.error);
     }
     load(command) {
         if (!command) this.error('No parameter set');
-        if (this.commandsList.indexOf(`${command}`) >= 0);
-        if (this.commandsList.indexOf(`${command}`) <= this.commandsList.length);
-            delete require.cache[require.resolve(`./commands/${command}`)];
-            this.commands[command] = require(`./commands/${command}`);
-            console.log(`LOADED: ${this.commands[commandName].name}`);
+        delete require.cache[require.resolve(`./commands/${command}`)];
+        this.commands[command] = require(`./commands/${command}`);
+        console.log(`LOADED: ${command}`.success);
+        
+        this.commands[command].name = command;
+        // Check if command has aliases to define
+        if (!this.commands[command].alias) return;
+        this.loadAliases(command);
     }
     loadAll() {
         let i;
@@ -50,35 +61,31 @@ class Comfy {
                 // Add command and slice file extension off at .slice(0, -3)
                 this.commands[commandName] = require(`./commands/${item}`);
                 this.commands[commandName].name = commandName;
-                console.log(`LOADED: ${this.commands[commandName].name}`);
+                console.log(`LOADED: ${this.commands[commandName].name}`.success);
+                // Check if command has aliases to define
+                if (!this.commands[commandName].alias) continue;
+                this.loadAliases(commandName);
             }
         }
     }
-    loadAliases() {
-        // Add aliases of commands
-        for (let i = 0; i < this.commandsList.length; i++) {
-            let item = this.commandsList[i];
-            let aliasName = item.slice(0, -3);
-            // Check if command has aliases to define
-            if (!this.commands[aliasName].alias) continue;
-            // Adds new versions of command with different names
-            for (let ii = 0; ii < this.commands[aliasName].alias.length; ii++) {
-
-                this.commands[this.commands[aliasName].alias[ii]] = Object.assign({}, this.commands[aliasName]);
-                // Add a .isAlias property to alias objects so commands distinguish them
-                // Help command uses this to prevent showing commands with same functionality with different names
-                this.commands[this.commands[aliasName].alias[ii]].isAlias = true;
-                // Distinguish which command this alias belongs to
-                this.commands[this.commands[aliasName].alias[ii]].aliasOf = aliasName;
-                // Add command name property to object
-                this.commands[this.commands[aliasName].alias[ii]].name = this.commands[aliasName].alias[ii];
-                console.log(`- alias: ${this.commands[this.commands[aliasName].alias[ii]].name}`);
-            }
+    loadAliases(commandName) {
+        // Adds new versions of command with different names
+        for (let ii = 0; ii < this.commands[commandName].alias.length; ii++) {
+            this.commands[this.commands[commandName].alias[ii]] = Object.assign({}, this.commands[commandName]);
+            // Add a .isAlias property to alias objects so commands distinguish them
+            // Help command uses this to prevent showing commands with same functionality with different names
+            this.commands[this.commands[commandName].alias[ii]].isAlias = true;
+            // Distinguish which command this alias belongs to
+            this.commands[this.commands[commandName].alias[ii]].aliasOf = commandName;
+            // Add command name property to object
+            this.commands[this.commands[commandName].alias[ii]].name = this.commands[commandName].alias[ii];
+            console.log(`-alias: ${this.commands[this.commands[commandName].alias[ii]].name}`.success);
         }
     }
     startListen() {
         // Catches messages
         this.bot.on('message', msg => {
+            console.log(`${msg.author}: ${msg.content}`);
             // Validate user input for easier handling
             if (msg.content[0] !== this.prefix || msg.content == this.prefix || msg.author.bot) return;
             // Input in sanitized in lowercase and with no prefix
@@ -89,7 +96,7 @@ class Comfy {
 
         // When ready console log
         this.bot.on('ready', () => {
-            console.log(`Logged: ${this.bot.user.tag}\nPrefix: ${this.prefix}\nDev: ${this.dev}`);
+            console.log(`Logged: ${this.bot.user.tag}\nPrefix: ${this.prefix}\nDev: ${this.dev}`.help);
         });
 
     }
