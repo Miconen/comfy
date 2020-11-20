@@ -7,7 +7,7 @@ class Comfy {
     constructor() {
         // TRUE for dev (Fewbewki Dev#0066)
         // FALSE for production (Fewbewki#7145)
-        this.devToggle = true;
+        this.dev = true;
         this.config = require('./config.json');
         this.credentials = require("./credentials.json");
         this.commandsList = fs.readdirSync('./commands/');
@@ -43,7 +43,6 @@ class Comfy {
         this.loadAliases(command);
     }
     loadAll() {
-        let i;
         for (let i = 0; i < this.commandsList.length; i++) {
             let item = this.commandsList[i];
             if (item.match(/\.js$/)) {
