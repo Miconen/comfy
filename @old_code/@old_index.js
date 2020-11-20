@@ -2,8 +2,6 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const getRepoInfo = require('git-repo-info');
 
-// TODO: Add osu profile and recent play commands
-
 Client = {
     // TRUE for dev (Fewbewki Dev#0066)
     // FALSE for production (Fewbewki#7145)

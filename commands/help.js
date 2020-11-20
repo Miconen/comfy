@@ -1,4 +1,3 @@
-// TODO: Replace everything with fancy embeds
 module.exports = {
     help: 'Help with commands',
     alias: [

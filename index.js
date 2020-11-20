@@ -3,25 +3,25 @@ const fs = require('fs');
 const getRepoInfo = require('git-repo-info');
 var colors = require('colors');
 
-// TRUE for dev (Fewbewki Dev#0066)
-// FALSE for production (Fewbewki#7145)
-const devToggle = false;
+// TODO: Replace messaging with fancy embeds
 
 class Comfy {
-    constructor(dev) {
+    constructor() {
+        // TRUE for dev (Fewbewki Dev#0066)
+        // FALSE for production (Fewbewki#7145)
+        this.devToggle = false;
         this.config = require('./config.json');
         this.credentials = require("./credentials.json");
         this.commandsList = fs.readdirSync('./commands/');
         this.commands = {};
         colors.setTheme({
-            help: 'bgBlue',
-            warn: 'bgYellow',
-            success: 'bgGreen',
-            error: 'bgRed'
+            help: 'blue',
+            warn: 'yellow',
+            success: 'green',
+            error: 'red'
         });
 
-        this.dev = dev;
-        this.prefix = dev ? this.prefix = this.config.prefix_dev : this.prefix = this.config.prefix;
+        this.prefix = this.dev ? this.prefix = this.config.prefix_dev : this.prefix = this.config.prefix;
 
         this.gitformation = getRepoInfo();
         this.bot = new Discord.Client();
@@ -79,7 +79,7 @@ class Comfy {
             this.commands[this.commands[commandName].alias[ii]].aliasOf = commandName;
             // Add command name property to object
             this.commands[this.commands[commandName].alias[ii]].name = this.commands[commandName].alias[ii];
-            console.log(`-alias: ${this.commands[this.commands[commandName].alias[ii]].name}`.success);
+            console.log(`-alias: ${this.commands[this.commands[commandName].alias[ii]].name}`);
         }
     }
     startListen() {
@@ -101,4 +101,5 @@ class Comfy {
 
     }
 }
-const comfyBot = new Comfy(devToggle);
+
+const comfyBot = new Comfy();

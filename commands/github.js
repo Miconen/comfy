@@ -14,8 +14,8 @@ module.exports = {
                     name: Client.bot.user.username,
                     icon_url: Client.bot.user.avatarURL
                 },
-                title: "https://github.com/Microoo/fewbewki",
-                url: "https://github.com/Microoo/fewbewki",
+                title: "https://github.com/Miconen/comfy",
+                url: "https://github.com/Miconen/comfy",
                 // IDEA: Add random flavor text from array
                 description: "Cool description here :)",
                 fields: [{
@@ -24,13 +24,13 @@ module.exports = {
                     },
                     {
                         name: "Last Commit",
-                        value: Client.gitformation.committer + " at " + Client.gitformation.committerDate + " _'" + Client.gitformation.commitMessage + "'_"
+                        value: `${Client.gitformation.committer} at ${Client.gitformation.committerDate} _'${Client.gitformation.commitMessage}'_`
                     },
                 ],
                 timestamp: new Date(),
                 footer: {
                     icon_url: Client.bot.user.avatarURL,
-                    text: "Fewbewki"
+                    text: "Comfy"
                 }
             }
         });
