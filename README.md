@@ -2,9 +2,7 @@
 Comfy to develop for discord bot using discord.js
 
 ## How to start & requirements
-Create yourself a discord dev application at https://discord.com/developers/applications
-once created open the application and create a new bot under 'Bot'
-click 'Click to Reveal Token' and copy it to your credentials.json file
+Create yourself a discord dev application at https://discord.com/developers/applications. Once created open the application and create a new bot under 'Bot'. Click 'Click to Reveal Token' and copy it to your credentials.json file token field. (token_dev is to be used wit another bot which you can switch to by setting devToggle = true in index.js)
 
 ### NPM Packages
 - discord.js
