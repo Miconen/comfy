@@ -5,7 +5,7 @@ Comfy to develop for discord bot using discord.js
 - discord.js
 - git-repo-info
 - colors
-#### Optional:
+#### Optional
 - forever
 
 ### Command template/example
