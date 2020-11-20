@@ -1,7 +1,5 @@
 const Discord = require('discord.js');
 const fs = require('fs');
-const getRepoInfo = require('git-repo-info');
-var colors = require('colors');
 
 // TODO: Replace messaging with fancy embeds
 
@@ -9,21 +7,14 @@ class Comfy {
     constructor() {
         // TRUE for dev (Fewbewki Dev#0066)
         // FALSE for production (Fewbewki#7145)
-        this.devToggle = false;
+        this.devToggle = true;
         this.config = require('./config.json');
         this.credentials = require("./credentials.json");
         this.commandsList = fs.readdirSync('./commands/');
         this.commands = {};
-        colors.setTheme({
-            help: 'blue',
-            warn: 'yellow',
-            success: 'green',
-            error: 'red'
-        });
 
         this.prefix = this.dev ? this.prefix = this.config.prefix_dev : this.prefix = this.config.prefix;
 
-        this.gitformation = getRepoInfo();
         this.bot = new Discord.Client();
         
         this.loadAll();
@@ -35,16 +26,16 @@ class Comfy {
     }
     errorReply(msg, error) {
         msg.reply(`ERROR: ${error}`);
-        console.log(`ERROR: ${error}`.error);
+        console.log(`ERROR: ${error}`);
     }
     error(error) {
-        return console.log(error.error);
+        return console.log(error);
     }
     load(command) {
         if (!command) this.error('No parameter set');
         delete require.cache[require.resolve(`./commands/${command}`)];
         this.commands[command] = require(`./commands/${command}`);
-        console.log(`LOADED: ${command}`.success);
+        console.log(`LOADED: ${command}`);
         
         this.commands[command].name = command;
         // Check if command has aliases to define
@@ -61,7 +52,7 @@ class Comfy {
                 // Add command and slice file extension off at .slice(0, -3)
                 this.commands[commandName] = require(`./commands/${item}`);
                 this.commands[commandName].name = commandName;
-                console.log(`LOADED: ${this.commands[commandName].name}`.success);
+                console.log(`LOADED: ${this.commands[commandName].name}`);
                 // Check if command has aliases to define
                 if (!this.commands[commandName].alias) continue;
                 this.loadAliases(commandName);
@@ -91,12 +82,12 @@ class Comfy {
             // Input in sanitized in lowercase and with no prefix
             let input = msg.content.toLowerCase().slice(this.prefix.length);
             let args = input.split(' ');
+            if (args[0] in this.commands && !this.commands[args[0]].func) return this.errorReply(msg, 'This command is not ready to use');
             if (args[0] in this.commands) this.commands[args[0]].func(this, msg, args);
         });
-
         // When ready console log
         this.bot.on('ready', () => {
-            console.log(`Logged: ${this.bot.user.tag}\nPrefix: ${this.prefix}\nDev: ${this.dev}`.help);
+            console.log(`Logged: ${this.bot.user.tag}\nPrefix: ${this.prefix}\nDev: ${this.dev}`);
         });
 
     }

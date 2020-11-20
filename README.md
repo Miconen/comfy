@@ -6,8 +6,6 @@ Create yourself a discord dev application at https://discord.com/developers/appl
 
 ### NPM Packages
 - discord.js
-- git-repo-info
-- colors
 #### Optional
 - forever
 
