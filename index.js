@@ -24,6 +24,9 @@ class Comfy {
         this.dev ? this.bot.login(this.credentials.token_dev) : this.bot.login(this.credentials.token);
 
     }
+    reply(msg, reply) {
+        msg.reply(reply);
+    }
     errorReply(msg, error) {
         msg.reply(`ERROR: ${error}`);
         console.log(`ERROR: ${error}`);

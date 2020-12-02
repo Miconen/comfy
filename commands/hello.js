@@ -3,6 +3,6 @@ module.exports = {
 
     func: (Client, msg, args) => {
         if (args.length > 1) return Client.errorReply(msg, 'Too many arguments');
-        msg.reply('Hello World');
+        Client.reply(msg, 'Hello World');
     }
 }
