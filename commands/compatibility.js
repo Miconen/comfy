@@ -36,8 +36,8 @@ module.exports = {
                 embed: {
                     color: 3447003,
                     author: {
-                        name: Client.bot.user.username,
-                        icon_url: Client.bot.user.avatarURL
+                        name: Client.serverBot.user.username,
+                        icon_url: Client.serverBot.user.avatarURL
                     },
                     title: "https://github.com/Miconen/comfy",
                     url: "https://github.com/Miconen/comfy",
@@ -50,7 +50,7 @@ module.exports = {
                     ],
                     timestamp: new Date(),
                     footer: {
-                        icon_url: Client.bot.user.avatarURL,
+                        icon_url: Client.serverBot.user.avatarURL,
                         text: "Comfy"
                     }
                 }
