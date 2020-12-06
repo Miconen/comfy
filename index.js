@@ -1,5 +1,8 @@
 const Discord = require("discord.js");
 const fs = require("fs");
+const dotenv = require('dotenv');
+const ComfyQuery = require("./utility/dbQueryUtility.js");
+dotenv.config();
 
 // TODO: Replace messaging with fancy embeds
 
@@ -7,29 +10,37 @@ class Comfy {
     constructor() {
         // TRUE for dev (Fewbewki Dev#0066)
         // FALSE for production (Fewbewki#7145)
-        this.serverDev = true;
-        this.ComfyGamble = require("./gambleFramework.js");
-        this.ComfyUser = require("./userInstance.js");
+        this.serverDev = false;
+
+        this.ComfyGamble = require("./utility/gambleUtility.js");
+        this.ComfyQuery = require("./utility/dbQueryUtility.js")
+        this.ComfyUser = require("./utility/userInstanceUtility.js");
+
+        this.serverQueryer = new ComfyQuery();
         this.serverConfig = require("./config.json");
-        this.serverCredentials = require("./credentials.json");
+        this.serverTokenProd = process.env.TOKEN_PROD;
+        this.serverTokenDev = process.env.TOKEN_DEV;
         this.serverCommandsList = fs.readdirSync("./commands/");
         this.serverCommands = {};
         this.serverUsers = [];
-
-
         this.serverPrefix = this.serverDev
-            ? (this.serverPrefix = this.serverConfig.prefix_dev)
-            : (this.serverPrefix = this.serverConfig.prefix);
-
+            ? this.serverPrefix = this.serverConfig.prefix_dev
+            : this.serverPrefix = this.serverConfig.prefix;
         this.serverBot = new Discord.Client();
 
+        // Query database and instantiate existing users
+        this.loadExistingUsers();
+        // Load all commands and aliases
         this.loadAll();
-        // this.loadAliases();
+        // Start listening to messages
         this.startListen();
         // Ternary operator to login based on this.serverDev boolean
         this.serverDev
-            ? this.serverBot.login(this.serverCredentials.token_dev)
-            : this.serverBot.login(this.serverCredentials.token);
+            ? this.serverBot.login(this.serverTokenDev)
+            : this.serverBot.login(this.serverTokenProd);
+    }
+    loadExistingUsers() {
+        this.serverQueryer.dbQuery(this, {});
     }
     reply(msg, reply) {
         msg.reply(reply);
@@ -109,8 +120,10 @@ class Comfy {
                 msg.content[0] !== this.serverPrefix ||
                 msg.content == this.serverPrefix ||
                 msg.author.bot
-            )
+            ) {
                 return;
+            }
+
             // Input in sanitized in lowercase and with no prefix
             let input = msg.content
                 .toLowerCase()
@@ -119,17 +132,21 @@ class Comfy {
             if (
                 args[0] in this.serverCommands &&
                 !this.serverCommands[args[0]].func
-            )
+            ) {
                 return this.errorReply(msg, "This command is not ready to use");
-
-            // Instanciate a new user
-            if (!this.serverUsers[msg.author]) {
-                this.serverUsers[msg.author] = new this.ComfyUser(msg);
             }
 
-            if (args[0] in this.serverCommands)
-                this.serverCommands[args[0]].func(this, msg, args);
+            // Instanciate a new user
+            if (!this.serverUsers[msg.author.id]) {
+                this.serverUsers[msg.author.id] = new this.ComfyUser(msg.author);
+                this.serverUsers[msg.author.id].setCurrency(process.env.GAMBLE_DEFAULT_CURRENCY)
+                console.log(`New user: ${msg.author.username} , ${msg.author.id}`);
+                // TODO: User correct datatypes instead of passing everything to database as strings
+                this.serverQueryer.dbInsert(this.serverUsers[msg.author.id]);
+            }
+            this.callCommand(msg, args);
         });
+
         // When ready console log
         this.serverBot.on("ready", () => {
             this.serverBot.user.setActivity(`Prefix: ${this.serverPrefix}`);
@@ -138,6 +155,11 @@ class Comfy {
                 `Logged: ${this.serverBot.user.tag}\nPrefix: ${this.serverPrefix}\nDev: ${this.serverDev}`
             );
         });
+    }
+    callCommand(msg, args) {
+        if (args[0] in this.serverCommands) {
+            this.serverCommands[args[0]].func(this, msg, args);
+        }
     }
 }
 

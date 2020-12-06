@@ -18,7 +18,9 @@
   "homepage": "https://github.com/Microoo/fewbewki#readme",
   "dependencies": {
     "discord.js": "^11.6.4",
+    "dotenv": "^8.2.0",
     "got": "^11.1.0",
+    "mongodb": "^3.6.3",
     "npm": "^7.0.12"
   }
 }

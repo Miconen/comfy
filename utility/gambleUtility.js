@@ -1,5 +1,3 @@
-const { Client } = require("discord.js");
-
 class ComfyGamble {
     constructor(Client, msg, args) {
         this.msg = msg;
@@ -19,7 +17,7 @@ class ComfyGamble {
         return this.stake;
     }
     setStake(Client, newStake) {
-        Client.serverUsers[this.msg.author].setCurrency(Client.serverUsers[this.msg.author].getCurrency() - parseInt(newStake));
+        Client.serverUsers[this.msg.author.id].setCurrency(Client.serverUsers[this.msg.author.id].getCurrency() - parseInt(newStake));
         this.stake = newStake;
     }
     createMinigame(Client, args) {
@@ -27,8 +25,8 @@ class ComfyGamble {
         this.setStatus('created');
     }
     leaveMinigame(Client) {
-        Client.reply(this.msg, `Game left, lost ${this.getStake()} & ${Client.serverUsers[this.msg.author].getCurrency()} left`);
-        delete Client.serverUsers[this.msg.author].clientInstances[this.game];
+        Client.reply(this.msg, `Game left, lost ${this.getStake()} & ${Client.serverUsers[this.msg.author.id].getCurrency()} left`);
+        delete Client.serverUsers[this.msg.author.id].clientInstances[this.game];
     }
 }
 
